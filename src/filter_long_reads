@@ -15,12 +15,14 @@ filter_long_reads() {
     local cmd
     local cmd_log
 
-    _lr="${1}"
+    _lr="$(readlink -f "${1}")"
+
+    printf "Processing long read file:\t%s\n" "${_lr}"
 
     if [[ "${_lr}" =~ ^(.*)(asw[^/]+)(.*)$ ]]; then
         _outfile="${BASH_REMATCH[2]}"
-        _outpath="${outdir}/${BASH_REMATCH[2]}.fq.gz"
-        printf "outfile:\t%s\n" "${_outpath}"
+        _outpath="${outdir}/${_outfile}.fq.gz"
+        printf "_outpath:\t%s\n" "${_outpath}"
     else
         exit 1
     fi
@@ -46,7 +48,7 @@ filter_long_reads() {
             "idhist=${outdir}/${_outfile}_idhist_mapped.txt"
             idbins=auto gcbins=auto )
 
-    cmd_log="${outdir}/_outfile.log"
+    cmd_log="${outdir}/${_outfile}.log"
 
     shopt -s extglob
     printf "Running command:\n"
