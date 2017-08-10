@@ -14,5 +14,6 @@ log_file="${outdir}/canu.log"
 bin/canu/canu \
     -p long_read -d "${outdir}" \
     genomeSize=600m \
-    -nanopore-raw "${lr1},${lr2}" \
+    -nanopore-raw "${lr1}" \
+    -nanopore-raw "${lr2}" \
     &> "${log_file}"
