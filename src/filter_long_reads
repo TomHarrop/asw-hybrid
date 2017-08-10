@@ -2,3 +2,61 @@
 
 set -eu
 
+export outdir
+outdir="output/filtered_long_reads"
+if [[ ! -e "${outdir}" ]]; then
+    mkdir -p "${outdir}"
+fi
+
+export -f filter_long_reads
+filter_long_reads() {
+    local _lr
+    local _outfile
+    local _outpath
+    local cmd
+    local cmd_log
+
+    _lr="${1}"
+
+    if [[ "${_lr}" =~ ^(.*)(asw[^/]+)(.*)$ ]]; then
+        _outfile="${BASH_REMATCH[2]}"
+        _outpath="${outdir}/${BASH_REMATCH[2]}.fq.gz"
+        printf "outfile:\t%s\n" "${_outpath}"
+    else
+        exit 1
+    fi
+
+    cmd=( bin/bbmap/reformat.sh
+            "in=${_lr}"
+            "out=${_outpath}"
+            minlength=1000
+            minavgquality=10
+            mingc=0.2
+            maxgc=0.4
+            "bhist=${outdir}/${_outfile}_bhist_mapped.txt"
+            "qhist=${outdir}/${_outfile}_qhist_mapped.txt"
+            "qchist=${outdir}/${_outfile}_qchist_mapped.txt"
+            "aqhist=${outdir}/${_outfile}_aqhist_mapped.txt"
+            "bqhist=${outdir}/${_outfile}_bqhist_mapped.txt"
+            "lhist=${outdir}/${_outfile}_lhist_mapped.txt"
+            "gchist=${outdir}/${_outfile}_gchist_mapped.txt"
+            "ehist=${outdir}/${_outfile}_ehist_mapped.txt"
+            "qahist=${outdir}/${_outfile}_qahist_mapped.txt"
+            "indelhist=${outdir}/${_outfile}_indelhist_mapped.txt"
+            "mhist=${outdir}/${_outfile}_mhist_mapped.txt"
+            "idhist=${outdir}/${_outfile}_idhist_mapped.txt"
+            idbins=auto gcbins=auto )
+
+    cmd_log="${outdir}/_outfile.log"
+
+    shopt -s extglob
+    printf "Running command:\n"
+    printf "%s " "${cmd[@]//+([[:blank:]])/ }"
+    printf "\n"
+    shopt -u extglob
+
+    "${cmd[@]}" 2> "${cmd_log}" 
+}
+
+find data/long_reads/ -name "*.fq.gz" \
+    -exec bash -c 'filter_long_reads "${0}"' {} \;
