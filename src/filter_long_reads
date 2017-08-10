@@ -28,6 +28,7 @@ filter_long_reads() {
     fi
 
     cmd=( bin/bbmap/reformat.sh
+            -Xmx200g
             "in=${_lr}"
             "out=${_outpath}"
             minlength=1000
