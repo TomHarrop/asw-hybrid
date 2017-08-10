@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -eu
+
+outdir="output/canu"
+if [[ ! -e "${outdir}" ]]; then
+    mkdir -p "${outdir}"
+fi
+
+reads="data/asw12_20170627_merged.fq.gz"
+log_file="${outdir}/canu.log"
+
+bin/canu/canu \
+    -p asw_raw -d "${outdir}" \
+    genomeSize=600m \
+    -nanopore-raw "${reads}" \
+    &> "${log_file}"
