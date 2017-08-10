@@ -8,7 +8,6 @@ if [[ ! -e "${outdir}" ]]; then
     mkdir -p "${outdir}"
 fi
 
-export -f filter_long_reads
 filter_long_reads() {
     local _lr
     local _outfile
@@ -57,6 +56,8 @@ filter_long_reads() {
 
     "${cmd[@]}" 2> "${cmd_log}" 
 }
+
+export -f filter_long_reads
 
 find data/long_reads/ -name "*.fq.gz" \
     -exec bash -c 'filter_long_reads "${0}"' {} \;
