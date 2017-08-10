@@ -7,11 +7,12 @@ if [[ ! -e "${outdir}" ]]; then
     mkdir -p "${outdir}"
 fi
 
-reads="data/asw12_20170627_merged.fq.gz"
+lr1="output/filtered_long_reads/asw12_20170627.fq.gz"
+lr2="output/filtered_long_reads/asw_14_precipitation.fq.gz"
 log_file="${outdir}/canu.log"
 
 bin/canu/canu \
-    -p asw_raw -d "${outdir}" \
+    -p long_read -d "${outdir}" \
     genomeSize=600m \
-    -nanopore-raw "${reads}" \
+    -nanopore-raw "${lr1},${lr2}" \
     &> "${log_file}"
