@@ -34,18 +34,18 @@ filter_long_reads() {
             minavgquality=10
             mingc=0.2
             maxgc=0.4
-            "bhist=${outdir}/${_outfile}_bhist_mapped.txt"
-            "qhist=${outdir}/${_outfile}_qhist_mapped.txt"
-            "qchist=${outdir}/${_outfile}_qchist_mapped.txt"
-            "aqhist=${outdir}/${_outfile}_aqhist_mapped.txt"
-            "bqhist=${outdir}/${_outfile}_bqhist_mapped.txt"
-            "lhist=${outdir}/${_outfile}_lhist_mapped.txt"
-            "gchist=${outdir}/${_outfile}_gchist_mapped.txt"
-            "ehist=${outdir}/${_outfile}_ehist_mapped.txt"
-            "qahist=${outdir}/${_outfile}_qahist_mapped.txt"
-            "indelhist=${outdir}/${_outfile}_indelhist_mapped.txt"
-            "mhist=${outdir}/${_outfile}_mhist_mapped.txt"
-            "idhist=${outdir}/${_outfile}_idhist_mapped.txt"
+            "bhist=${outdir}/${_outfile}_bhist.txt"
+            "qhist=${outdir}/${_outfile}_qhist.txt"
+            "qchist=${outdir}/${_outfile}_qchist.txt"
+            "aqhist=${outdir}/${_outfile}_aqhist.txt"
+            "bqhist=${outdir}/${_outfile}_bqhist.txt"
+            "lhist=${outdir}/${_outfile}_lhist.txt"
+            "gchist=${outdir}/${_outfile}_gchist.txt"
+            "ehist=${outdir}/${_outfile}_ehist.txt"
+            "qahist=${outdir}/${_outfile}_qahist.txt"
+            "indelhist=${outdir}/${_outfile}_indelhist.txt"
+            "mhist=${outdir}/${_outfile}_mhist.txt"
+            "idhist=${outdir}/${_outfile}_idhist.txt"
             idbins=auto gcbins=auto )
 
     cmd_log="${outdir}/${_outfile}.log"
