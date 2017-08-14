@@ -1,3 +1,18 @@
+#!/usr/bin/env bash
+
+
+
+cmd=( dipspades.py
+        -o "${outdir}"
+        --pe1-12 "${pe150}"
+        --pe2-12 "${pe100}"
+        --mp1-12 "${mp}"
+        --mp1-rf
+
+
+ )
+
+
 # haplocontigs: meraculous haplotigs
 
 # trusted contigs: meraculous full-depth isotigs

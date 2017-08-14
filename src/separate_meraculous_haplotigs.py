@@ -6,6 +6,14 @@ import os
 import re
 import tompytools
 
+def remove_haplotig_suffix(haplotig):
+    old_id = haplotig.id
+    new_id = re.sub('_p\d+$', '', old_id)
+    haplotig.id = new_id
+    haplotig.name = ''
+    haplotig.description = ''
+    return(haplotig)
+
 # output
 outdir = 'output/meraculous_haplotigs'
 if not os.path.isdir(outdir):
