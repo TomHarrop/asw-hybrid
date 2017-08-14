@@ -47,8 +47,8 @@ demux_fastq() {
 
     _cmd=( bin/bbmap/reformat.sh
             in="${_reads}"
-            out1="${_r1}"
-            out1="${_r2}" )
+            out="${_r1}"
+            out2="${_r2}" )
     _log="${_r1//_r1.fastq}.log"
 
     shopt -s extglob
