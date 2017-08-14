@@ -23,6 +23,7 @@ if not os.path.isdir(outdir):
 haplotigs_fasta = ('data/meraculous_diploid2/meraculous_merblast/'
                    'haplotigs.filtered.fa')
 isotig_file = os.path.join(outdir, 'dd_isotigs.fa')
+haplotig_file = os.path.join(outdir, 'all_haplotigs.fa')
 h1_file = os.path.join(outdir, 'haplotigs_p1.fa')
 h2_file = os.path.join(outdir, 'haplotigs_p2.fa')
 
@@ -33,10 +34,13 @@ records = list(SeqIO.parse(haplotigs_fasta, 'fasta'))
 # separate haplotigs and diplotigs
 tompytools.generate_message('Extracting isotigs')
 isotigs = [x for x in records if 'isotigDD' in x.name]
-tompytools.generate_message('Extracting and renaming p1 diplotigs')
-haplotig_1 = [remove_haplotig_suffix(x) for x in records if '_p1' in x.name]
-tompytools.generate_message('Extracting and renaming p2 diplotigs')
-haplotig_2 = [remove_haplotig_suffix(x) for x in records if '_p2' in x.name]
+# tompytools.generate_message('Extracting and renaming p1 diplotigs')
+# haplotig_1 = [remove_haplotig_suffix(x) for x in records if '_p1' in x.name]
+# tompytools.generate_message('Extracting and renaming p2 diplotigs')
+# haplotig_2 = [remove_haplotig_suffix(x) for x in records if '_p2' in x.name]
+tompytools.generate_message('Extracting haplotigs')
+all_haplotigs = [x for x in records 
+                 if ('_p1' in x.name or '_p2' in x.name)]
 
 # write output to disk
 tompytools.generate_message('Writing isotigs to file\n%s' % isotig_file)
@@ -45,14 +49,20 @@ SeqIO.write(
     handle=isotig_file,
     format='fasta')
 
-tompytools.generate_message('Writing p1 diplotigs to file\n%s' % h1_file)
+tompytools.generate_message('Writing haplotigs to file\n%s' % haplotig_file)
 SeqIO.write(
-    sequences=haplotig_1,
-    handle=h1_file,
+    sequences=all_haplotigs,
+    handle=haplotig_file,
     format='fasta')
 
-tompytools.generate_message('Writing p2 diplotigs to file\n%s' % h2_file)
-SeqIO.write(
-    sequences=haplotig_2,
-    handle=h2_file,
-    format='fasta')
+# tompytools.generate_message('Writing p1 diplotigs to file\n%s' % h1_file)
+# SeqIO.write(
+#     sequences=haplotig_1,
+#     handle=h1_file,
+#     format='fasta')
+
+# tompytools.generate_message('Writing p2 diplotigs to file\n%s' % h2_file)
+# SeqIO.write(
+#     sequences=haplotig_2,
+#     handle=h2_file,
+#     format='fasta')

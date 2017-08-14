@@ -3,11 +3,19 @@
 
 
 cmd=( dipspades.py
+        --threads 100
+        --memory 900
         -o "${outdir}"
         --pe1-12 "${pe150}"
         --pe2-12 "${pe100}"
         --mp1-12 "${mp}"
         --mp1-rf
+        --nanopore "${nanopore_corrected}"
+        --trusted-contigs "${dd_isotigs}"
+        --untrusted-contigs "${canu_contigs}"
+        --hap "${haplotig_1}"
+        --hap "${haplotig_2}"
+
 
 
  )
