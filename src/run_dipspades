@@ -7,23 +7,78 @@ if [[ ! -e "${outdir}" ]]; then
     mkdir -p "${outdir}"
 fi
 
+tmpdir="${outdir}/demuxed_reads"
+if [[ ! -e "${tmpdir}" ]]; then
+    mkdir -p "${tmpdir}"
+fi
+
 # files
 # what about meraculous SD-isotigs?
-pe150="data/short_reads/pe150_filtered_trimmed.fastq.gz"
-pe100="data/short_reads/pe100_filtered_trimmed.fastq.gz"
+pe="data/short_reads/pe_merged_normalised.fastq.gz"
 mp="data/mate_pairs/lmp.fastq.gz"
 nanopore_corrected="output/canu/long_read.correctedReads.fasta.gz"
 dd_isotigs="output/meraculous_haplotigs/dd_isotigs.fa"
 canu_contigs="output/canu/long_read.contigs.fasta"
 all_haplotigs="output/meraculous_haplotigs/all_haplotigs.fa"
 
+# functions to demux input 
+generate_r1() {
+    local _bn
+    _bn=$(basename "${1}" .fastq.gz)
+    echo "${tmpdir}/${_bn}_r1.fastq"
+}
+generate_r2() {
+    local _bn
+    _bn=$(basename "${1}" .fastq.gz)
+    echo "${tmpdir}/${_bn}_r2.fastq"
+}
+
+demux_fastq() {
+    local _reads
+    local _r1
+    local _r2
+
+    _reads="${1}"
+    _r1="${2}"
+    _r2="${3}"
+
+    printf "Demuxing long read file %s\nto\tr1: %s\n\tr2: %s\n" \
+        "${_reads}" "${_r1}" "${_r2}"
+
+    _cmd=( bin/bbmap/reformat.sh
+            in="${_reads}"
+            out1="${_r1}"
+            out1="${_r2}" )
+    _log="${_r1//_r1.fastq}.log"
+
+    shopt -s extglob
+    printf "Running command:\n"
+    printf "%s " "${_cmd[@]//+([[:blank:]])/ }"
+    printf "\n"
+    shopt -u extglob
+
+    "${_cmd[@]}" &> "${_log}" 
+}
+
+# demux input
+pe_r1="$(generate_r1 "${pe}")"
+pe_r2="$(generate_r2 "${pe}")"
+demux_fastq "${pe}" "${pe_r1}" "${pe_r2}"
+
+mp_r1="$(generate_r1 "${mp}")"
+mp_r2="$(generate_r2 "${mp}")"
+demux_fastq "${mp}" "${mp_r1}" "${mp_r2}"
+
+# run spades
 cmd=( dipspades.py
+        --only-assembler
         --threads 100
         --memory 900
         -o "${outdir}"
-        --pe1-12 "${pe150}"
-        --pe2-12 "${pe100}"
-        --mp1-12 "${mp}"
+        --pe1-1 "${pe_r1}"
+        --pe1-2 "${pe_r2}"
+        --mp1-1 "${mp_r1}"
+        --mp1-2 "${mp_r2}"
         --mp1-rf
         --nanopore "${nanopore_corrected}"
         --trusted-contigs "${dd_isotigs}"
