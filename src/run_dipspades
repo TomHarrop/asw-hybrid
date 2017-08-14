@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 
+set -eu
 
+outdir="output/dipspades"
+if [[ ! -e "${outdir}" ]]; then
+    mkdir -p "${outdir}"
+fi
+
+# files
+# what about meraculous SD-isotigs?
+pe150="data/short_reads/pe150_filtered_trimmed.fastq.gz"
+pe100="data/short_reads/pe100_filtered_trimmed.fastq.gz"
+mp="data/mate_pairs/lmp.fastq.gz"
+nanopore_corrected="output/canu/long_read.correctedReads.fasta.gz"
+dd_isotigs="output/meraculous_haplotigs/dd_isotigs.fa"
+canu_contigs="output/canu/long_read.contigs.fasta"
+all_haplotigs="output/meraculous_haplotigs/all_haplotigs.fa"
 
 cmd=( dipspades.py
         --threads 100
@@ -13,20 +28,15 @@ cmd=( dipspades.py
         --nanopore "${nanopore_corrected}"
         --trusted-contigs "${dd_isotigs}"
         --untrusted-contigs "${canu_contigs}"
-        --hap "${haplotig_1}"
-        --hap "${haplotig_2}"
+        --hap "${all_haplotigs}" )
 
 
+cmd_log="${outdir}/dipspades.log"
 
- )
+shopt -s extglob
+printf "Running command:\n"
+printf "%s " "${cmd[@]//+([[:blank:]])/ }"
+printf "\n"
+shopt -u extglob
 
-
-# haplocontigs: meraculous haplotigs
-
-# trusted contigs: meraculous full-depth isotigs
-
-# what about meraculous SD-isotigs?
-
-# untrusted contigs: canu contigs
-
-# nanopore-raw: canu corrected reads
+"${cmd[@]}" &> "${cmd_log}" 
