@@ -72,7 +72,7 @@ demux_fastq "${mp}" "${mp_r1}" "${mp_r2}"
 # run spades
 cmd=( dipspades.py
         --only-assembler
-        --threads 100
+        --threads 50
         --memory 900
         -o "${outdir}"
         --pe1-1 "${pe_r1}"
